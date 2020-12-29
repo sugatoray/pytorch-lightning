@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pytorch_lightning.utilities import DistributedType, DeviceType
+from pytorch_lightning.utilities import DistributedType, DeviceType, rank_zero_warn
 
 
 class DeprecatedDistDeviceAttributes:
@@ -23,7 +23,7 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def on_cpu(self) -> bool:
-        # rank_zero_warn("Internal: `on_cpu` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning)
+        rank_zero_warn("Internal: `on_cpu` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning)
         return self._device_type and self._device_type == DeviceType.CPU
 
     @on_cpu.setter
@@ -34,7 +34,7 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def on_tpu(self) -> bool:
-        # rank_zero_warn("Internal: `on_tpu` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning)
+        rank_zero_warn("Internal: `on_tpu` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning)
         return self._device_type and self._device_type == DeviceType.TPU
 
     @on_tpu.setter
@@ -46,7 +46,7 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def use_tpu(self) -> bool:
-        # rank_zero_warn("Internal: `use_tpu` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning)
+        rank_zero_warn("Internal: `use_tpu` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning)
         return self.on_tpu
 
     @use_tpu.setter
@@ -57,7 +57,7 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def on_gpu(self) -> bool:
-        # rank_zero_warn("Internal: `on_gpu` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning)
+        rank_zero_warn("Internal: `on_gpu` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning)
         return self._device_type and self._device_type == DeviceType.GPU
 
     @on_gpu.setter
@@ -69,7 +69,7 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def use_dp(self) -> bool:
-        # rank_zero_warn("Internal: `use_dp` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning)
+        rank_zero_warn("Internal: `use_dp` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning)
         return self._device_type and self._distrib_type == DistributedType.DP
 
     @use_dp.setter
@@ -80,7 +80,7 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def use_ddp(self) -> bool:
-        # rank_zero_warn("Internal: `use_ddp` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning)
+        rank_zero_warn("Internal: `use_ddp` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning)
         return self._device_type and self._distrib_type == DistributedType.DDP
 
     @use_ddp.setter
@@ -91,7 +91,7 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def use_ddp2(self) -> bool:
-        # rank_zero_warn("Internal: `use_ddp2` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning)
+        rank_zero_warn("Internal: `use_ddp2` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning)
         return self._device_type and self._distrib_type == DistributedType.DDP2
 
     @use_ddp2.setter
@@ -102,9 +102,9 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def use_horovod(self) -> bool:
-        # rank_zero_warn(
-        #     "Internal: `use_horovod` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning
-        # )
+        rank_zero_warn(
+            "Internal: `use_horovod` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning
+        )
         return self._device_type and self._distrib_type == DistributedType.HOROVOD
 
     @use_horovod.setter
@@ -117,9 +117,9 @@ class DeprecatedDistDeviceAttributes:
 
     @property
     def use_single_gpu(self) -> bool:
-        # rank_zero_warn(
-        #     "Internal: `use_single_gpu` is deprecated in v1.1 and will be removed in v1.2.", DeprecationWarning,
-        # )
+        rank_zero_warn(
+            "Internal: `use_single_gpu` is deprecated in v1.2 and will be removed in v1.4.", DeprecationWarning
+        )
         # todo, limiting to exclude DDP2 is not clear but it comes from connectors...
         return (self._device_type and self._device_type == DeviceType.GPU
                 and self.num_gpus == 1

@@ -44,25 +44,33 @@ def test_v1_4_0_deprecated_trainer_attributes():
     trainer._device_type = None
 
     trainer.on_cpu = True
-    assert trainer.on_cpu
+    with pytest.deprecated_call(match='deprecated in v1.2 and will be removed in v1.4'):
+        assert trainer.on_cpu
 
     trainer.on_gpu = True
-    assert trainer.on_gpu
+    with pytest.deprecated_call(match='deprecated in v1.2 and will be removed in v1.4'):
+        assert trainer.on_gpu
 
     trainer.on_tpu = True
-    assert trainer.on_tpu
+    with pytest.deprecated_call(match='deprecated in v1.2 and will be removed in v1.4'):
+        assert trainer.on_tpu
     trainer._device_type = None
     trainer.use_tpu = True
-    assert trainer.use_tpu
+    with pytest.deprecated_call(match='deprecated in v1.2 and will be removed in v1.4'):
+        assert trainer.use_tpu
 
     trainer.use_dp = True
-    assert trainer.use_dp
+    with pytest.deprecated_call(match='deprecated in v1.2 and will be removed in v1.4'):
+        assert trainer.use_dp
 
     trainer.use_ddp = True
-    assert trainer.use_ddp
+    with pytest.deprecated_call(match='deprecated in v1.2 and will be removed in v1.4'):
+        assert trainer.use_ddp
 
     trainer.use_ddp2 = True
-    assert trainer.use_ddp2
+    with pytest.deprecated_call(match='deprecated in v1.2 and will be removed in v1.4'):
+        assert trainer.use_ddp2
 
     trainer.use_horovod = True
-    assert trainer.use_horovod
+    with pytest.deprecated_call(match='deprecated in v1.2 and will be removed in v1.4'):
+        assert trainer.use_horovod
