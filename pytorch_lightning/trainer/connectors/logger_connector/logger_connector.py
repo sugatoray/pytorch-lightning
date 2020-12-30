@@ -23,7 +23,7 @@ from pytorch_lightning.core.step_result import EvalResult, Result
 from pytorch_lightning.loggers import LoggerCollection, TensorBoardLogger
 from pytorch_lightning.trainer.connectors.logger_connector.callback_hook_validator import CallbackHookNameValidator
 from pytorch_lightning.trainer.connectors.logger_connector.epoch_result_store import EpochResultStore, LoggerStages
-from pytorch_lightning.utilities import flatten_dict
+from pytorch_lightning.utilities import flatten_dict, DeviceType
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from pytorch_lightning.utilities.model_helpers import is_overridden
 
@@ -173,7 +173,7 @@ class LoggerConnector:
                 and global_step for the rest.
         """
         # add gpu memory
-        if self.trainer.on_gpu and self.trainer.log_gpu_memory:
+        if self.trainer._device_type == DeviceType.GPU and self.trainer.log_gpu_memory:
             mem_map = memory.get_memory_profile(self.trainer.log_gpu_memory)
             metrics.update(mem_map)
 

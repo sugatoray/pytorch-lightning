@@ -15,7 +15,7 @@ import os
 
 import torch
 
-from pytorch_lightning.utilities import _HOROVOD_AVAILABLE
+from pytorch_lightning.utilities import _HOROVOD_AVAILABLE, DeviceType, DistributedType
 from pytorch_lightning import _logger as log
 from pytorch_lightning import accelerators
 from pytorch_lightning.accelerators.accelerator import Accelerator
@@ -113,7 +113,7 @@ class AcceleratorConnector:
         self.set_distributed_mode()
 
         # override dist backend when using tpus
-        if self.trainer.on_tpu:
+        if self.trainer._device_type == DeviceType.TPU:
             self.trainer.distributed_backend = "tpu"
             self.trainer.use_tpu = True
 
@@ -260,7 +260,7 @@ class AcceleratorConnector:
                 ddp_plugin=self.trainer.plugin_connector.ddp_plugin
             )
 
-        elif self.trainer.use_dp:
+        elif self.trainer._distrib_type == DistributedType.DP:
             accelerator_backend = accelerators.DataParallelAccelerator(self.trainer, cluster_env)
 
         elif self.trainer.use_horovod:
@@ -269,7 +269,7 @@ class AcceleratorConnector:
         elif self.trainer.use_single_gpu:
             accelerator_backend = accelerators.GPUAccelerator(self.trainer, cluster_env)
 
-        elif self.trainer.use_tpu:
+        elif self.trainer._device_type == DeviceType.TPU:
             accelerator_backend = accelerators.TPUAccelerator(self.trainer, cluster_env)
 
         elif self.trainer.distributed_backend is None:
@@ -346,11 +346,11 @@ class AcceleratorConnector:
                 'To silence this warning set `accelerator="ddp"` or `accelerator="ddp2"`'
             )
 
-        rank_zero_info(f'GPU available: {torch.cuda.is_available()}, used: {self.trainer.on_gpu}')
+        rank_zero_info(f'GPU available: {torch.cuda.is_available()}, used: {self.trainer._device_type == DeviceType.GPU}')
         num_cores = self.trainer.tpu_cores if self.trainer.tpu_cores is not None else 0
         rank_zero_info(f'TPU available: {_TPU_AVAILABLE}, using: {num_cores} TPU cores')
 
-        if torch.cuda.is_available() and not self.trainer.on_gpu:
+        if torch.cuda.is_available() and not self.trainer._device_type == DeviceType.GPU:
             rank_zero_warn('GPU available but not used. Set the --gpus flag when calling the script.')
 
     def _set_horovod_backend(self):
@@ -359,7 +359,7 @@ class AcceleratorConnector:
 
         # Initialize Horovod to get rank / size info
         hvd.init()
-        if self.trainer.on_gpu:
+        if self.trainer._device_type == DeviceType.GPU:
             # Horovod assigns one local GPU per process
             self.trainer.root_gpu = hvd.local_rank()
 

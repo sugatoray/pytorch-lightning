@@ -282,7 +282,7 @@ def parallel_apply(modules, inputs, kwargs_tup=None, devices=None):  # pragma: n
                 if output is None:
                     warn_missing_output(fx_called)
 
-                if output is not None and (module.use_dp or module.use_ddp2):
+                if output is not None and module.distrib_type in ("dp", "ddp2"):
                     auto_squeeze_dim_zeros(output)
                 # ---------------
 
